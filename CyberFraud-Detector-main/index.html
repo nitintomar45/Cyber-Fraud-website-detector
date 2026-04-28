@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Fraud Detection System - URL Security Scanner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L4 8V14C4 21.18 8.84 27.62 16 29C23.16 27.62 28 21.18 28 14V8L16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 10V16L20 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h1>Cyber Fraud Detection System</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalScans">0</span>
+                        <span class="stat-label">Total Scans</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="threatsBlocked">0</span>
+                        <span class="stat-label">Threats Blocked</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="app-nav">
+            <button class="nav-btn active" data-tab="scanner">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                Scanner
+            </button>
+            <button class="nav-btn" data-tab="history">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                History
+            </button>
+            <button class="nav-btn" data-tab="rules">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="12" y1="18" x2="12" y2="12"/>
+                    <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>
+                Rules
+            </button>
+            <button class="nav-btn" data-tab="blacklist">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Blacklist
+            </button>
+            <button class="nav-btn" data-tab="analytics">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="20" x2="12" y2="10"/>
+                    <line x1="18" y1="20" x2="18" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="16"/>
+                </svg>
+                Analytics
+            </button>
+            <button class="nav-btn" data-tab="about">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4"/>
+                    <path d="M12 8h.01"/>
+                </svg>
+                About
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Scanner Tab -->
+            <div class="tab-content active" id="scanner-tab">
+                <div class="scanner-section">
+                    <div class="scanner-card">
+                        <h2>URL Security Scanner</h2>
+                        <p class="subtitle">Enter a URL to analyze for potential cyber threats and fraud indicators</p>
+                        
+                        <div class="scanner-form">
+                            <div class="input-group">
+                                <input type="text" id="urlInput" class="url-input" placeholder="https://example.com" />
+                                <button class="btn btn--primary" id="scanBtn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    Scan URL
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="loading-state" id="loadingState" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Analyzing URL for threats...</p>
+                        </div>
+
+                        <div class="scan-results" id="scanResults" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div class="tab-content" id="history-tab">
+                <div class="history-section">
+                    <div class="section-header">
+                        <h2>Scan History</h2>
+                        <div class="header-actions">
+                            <button class="btn btn--secondary" id="exportHistoryBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export CSV
+                            </button>
+                            <button class="btn btn--outline" id="clearHistoryBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                                Clear History
+                            </button>
+                        </div>
+                    </div>
+                    <div class="history-table-container">
+                        <table class="history-table" id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>URL</th>
+                                    <th>Risk Level</th>
+                                    <th>Risk Score</th>
+                                    <th>Threats Detected</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <tr class="empty-state">
+                                    <td colspan="6">No scans yet. Start by scanning a URL in the Scanner tab.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rules Tab -->
+            <div class="tab-content" id="rules-tab">
+                <div class="rules-section">
+                    <div class="section-header">
+                        <h2>Detection Rules Database</h2>
+                        <button class="btn btn--primary" id="refreshRulesBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                            </svg>
+                            Refresh Rules
+                        </button>
+                    </div>
+                    
+                    <div class="rules-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: var(--color-bg-1);">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalRules">0</div>
+                                <div class="stat-label">Total Rules</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: var(--color-bg-4);">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="dangerousRules">0</div>
+                                <div class="stat-label">Dangerous Rules</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: var(--color-bg-2);">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="warningRules">0</div>
+                                <div class="stat-label">Warning Rules</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: var(--color-bg-8);">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="16" x2="12" y2="12"/>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="infoRules">0</div>
+                                <div class="stat-label">Info Rules</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rules-list" id="rulesList"></div>
+
+                    <div class="last-updated">
+                        Last Updated: <span id="rulesLastUpdated">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blacklist Tab -->
+            <div class="tab-content" id="blacklist-tab">
+                <div class="blacklist-section">
+                    <div class="section-header">
+                        <h2>Blacklist Management</h2>
+                        <span class="badge">Active Protection</span>
+                    </div>
+
+                    <div class="blacklist-categories">
+                        <div class="blacklist-card">
+                            <h3>Phishing Domains</h3>
+                            <p class="count"><span id="phishingCount">0</span> domains blocked</p>
+                            <div class="domain-list" id="phishingDomains"></div>
+                        </div>
+
+                        <div class="blacklist-card">
+                            <h3>Suspicious TLDs</h3>
+                            <p class="count"><span id="tldCount">0</span> TLDs monitored</p>
+                            <div class="domain-list" id="suspiciousTlds"></div>
+                        </div>
+
+                        <div class="blacklist-card">
+                            <h3>Malware Domains</h3>
+                            <p class="count"><span id="malwareCount">0</span> domains blocked</p>
+                            <div class="domain-list" id="malwareDomains"></div>
+                        </div>
+
+                        <div class="blacklist-card">
+                            <h3>Banking Fraud Keywords</h3>
+                            <p class="count"><span id="keywordCount">0</span> keywords monitored</p>
+                            <div class="domain-list" id="fraudKeywords"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="tab-content" id="analytics-tab">
+                <div class="analytics-section">
+                    <h2>Security Analytics Dashboard</h2>
+                    
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>Scan Overview</h3>
+                            <div class="analytics-stats">
+                                <div class="analytics-stat">
+                                    <span class="label">Total URLs Scanned</span>
+                                    <span class="value" id="analyticsTotal">0</span>
+                                </div>
+                                <div class="analytics-stat">
+                                    <span class="label">Safe URLs</span>
+                                    <span class="value safe" id="analyticsSafe">0</span>
+                                </div>
+                                <div class="analytics-stat">
+                                    <span class="label">Warnings</span>
+                                    <span class="value warning" id="analyticsWarning">0</span>
+                                </div>
+                                <div class="analytics-stat">
+                                    <span class="label">Dangerous URLs</span>
+                                    <span class="value danger" id="analyticsDangerous">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Threat Distribution</h3>
+                            <canvas id="threatChart"></canvas>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Most Common Threats</h3>
+                            <div class="threat-list" id="commonThreats">
+                                <div class="empty-state-small">No threats detected yet</div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Risk Score Distribution</h3>
+                            <canvas id="riskChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="analytics-actions">
+                        <button class="btn btn--outline" id="reportFalsePositive">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            Report False Positive
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div class="tab-content" id="about-tab">
+                <div class="about-section">
+                    <h2>About Cyber Fraud Detection System</h2>
+                    
+                    <div class="about-content">
+                        <div class="about-card">
+                            <h3>Project Overview</h3>
+                            <p>The Cyber Fraud Detection System is a comprehensive, rule-based web application designed to detect and block malicious web links related to cyber frauds. It performs real-time URL analysis without machine learning, making it lightweight and suitable for Indian digital banking security.</p>
+                        </div>
+
+                        <div class="about-card">
+                            <h3>Key Features</h3>
+                            <ul class="feature-list">
+                                <li><strong>Real-time URL Analysis:</strong> Instant scanning of URLs for potential threats</li>
+                                <li><strong>Multi-layer Detection:</strong> 10+ detection rules across 8 categories</li>
+                                <li><strong>Phishing Detection:</strong> Identifies fake banking and payment sites</li>
+                                <li><strong>Malware Protection:</strong> Detects known malware distribution URLs</li>
+                                <li><strong>Domain Reputation:</strong> Checks against blacklisted domains and suspicious TLDs</li>
+                                <li><strong>Banking-Specific Checks:</strong> Specialized rules for Indian banking fraud</li>
+                                <li><strong>Scan History:</strong> Complete tracking of all analyzed URLs</li>
+                                <li><strong>Analytics Dashboard:</strong> Real-time statistics and threat insights</li>
+                            </ul>
+                        </div>
+
+                        <div class="about-card">
+                            <h3>Detection Categories</h3>
+                            <div class="categories-grid">
+                                <div class="category-item">
+                                    <strong>Phishing Patterns</strong>
+                                    <p>Detects fake login pages and credential harvesting attempts</p>
+                                </div>
+                                <div class="category-item">
+                                    <strong>Malware Indicators</strong>
+                                    <p>Identifies known malware distribution and ransomware URLs</p>
+                                </div>
+                                <div class="category-item">
+                                    <strong>Banking Fraud</strong>
+                                    <p>Specialized detection for fake UPI, PayTM, and bank URLs</p>
+                                </div>
+                                <div class="category-item">
+                                    <strong>Domain Reputation</strong>
+                                    <p>Checks domain age, blacklists, and suspicious TLDs</p>
+                                </div>
+                                <div class="category-item">
+                                    <strong>SSL/Certificate</strong>
+                                    <p>Validates HTTPS usage and certificate presence</p>
+                                </div>
+                                <div class="category-item">
+                                    <strong>URL Structure</strong>
+                                    <p>Analyzes URL patterns, length, and subdomain anomalies</p>
+                                </div>
+                                <div class="category-item">
+                                    <strong>Homograph Attacks</strong>
+                                    <p>Detects character confusion and punycode domains</p>
+                                </div>
+                                <div class="category-item">
+                                    <strong>Credential Harvesting</strong>
+                                    <p>Identifies parameter injection and data theft attempts</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-card">
+                            <h3>Risk Scoring System</h3>
+                            <div class="risk-scoring">
+                                <div class="risk-level-item">
+                                    <div class="risk-indicator safe"></div>
+                                    <div>
+                                        <strong>Safe (0-30 points)</strong>
+                                        <p>URL appears legitimate with no significant threats detected</p>
+                                    </div>
+                                </div>
+                                <div class="risk-level-item">
+                                    <div class="risk-indicator warning"></div>
+                                    <div>
+                                        <strong>Warning (31-70 points)</strong>
+                                        <p>Suspicious patterns detected. Exercise caution when accessing</p>
+                                    </div>
+                                </div>
+                                <div class="risk-level-item">
+                                    <div class="risk-indicator danger"></div>
+                                    <div>
+                                        <strong>Dangerous (71-100 points)</strong>
+                                        <p>Critical threats detected. Do not access this URL</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-card">
+                            <h3>Technology Stack</h3>
+                            <p>Built with modern web technologies: HTML5, CSS3, JavaScript (ES6+), and Chart.js for data visualization. The application runs entirely in the browser with no external dependencies or server requirements.</p>
+                        </div>
+
+                        <div class="about-card">
+                            <h3>Version Information</h3>
+                            <p><strong>Version:</strong> 1.0.0</p>
+                            <p><strong>Last Updated:</strong> November 27, 2025</p>
+                            <p><strong>Target:</strong> Indian Digital Banking Security</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>&copy; 2025 Cyber Fraud Detection System. Protecting Indian Digital Banking.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
